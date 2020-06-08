@@ -43,5 +43,5 @@ function StartState:render()
   love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90, VIRTUAL_WIDTH, "center")
 
   -- reset the color
-  love.graphics.setColor(255/255, 255/255, 255/255, 0.9)
+  love.graphics.setColor(255/255, 255/255, 255/255, 1)
 end
