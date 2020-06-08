@@ -13,6 +13,15 @@ function StartState:update(dt)
     gSounds["paddle-hit"]:play()
   end
 
+  -- confirm whichever option we have selected to change screens
+  if love.keyboard.wasPressed("enter") or love.keyboard.wasPressed("return") then
+    gSounds["confirm"]:play()
+
+    if highlighted == 1 then
+      gStateMachine:change("play")
+    end
+  end
+
   -- we no longer have this globally, so include here
   if love.keyboard.wasPressed("escape") then
     love.event.quit()
@@ -43,5 +52,5 @@ function StartState:render()
   love.graphics.printf("HIGH SCORES", 0, VIRTUAL_HEIGHT / 2 + 90, VIRTUAL_WIDTH, "center")
 
   -- reset the color
-  love.graphics.setColor(255/255, 255/255, 255/255, 1)
+  love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 1)
 end
