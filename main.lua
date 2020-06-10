@@ -38,7 +38,8 @@ function love.load()
   gFrames = {
     ["paddles"] = GenerateQuadsPaddles(gTextures["main"]),
     ["balls"] = GenerateQuadsBalls(gTextures["main"]),
-    ["bricks"] = GenerateQuadsBricks(gTextures["main"])
+    ["bricks"] = GenerateQuadsBricks(gTextures["main"]),
+    ["hearts"] = GenerateQuads(gTextures["hearts"], 10, 9)
   }
 
   -- initialize our virtual resolution, which will be rendered within our
@@ -58,20 +59,20 @@ function love.load()
   -- set up our sound effects; later, we can just index this table and
   -- call each entry's `play` method
   gSounds = {
-    ["paddle-hit"] = love.audio.newSource("sounds/paddle_hit.wav", "static"),
-    ["score"] = love.audio.newSource("sounds/score.wav", "static"),
-    ["wall-hit"] = love.audio.newSource("sounds/wall_hit.wav", "static"),
-    ["confirm"] = love.audio.newSource("sounds/confirm.wav", "static"),
-    ["select"] = love.audio.newSource("sounds/select.wav", "static"),
-    ["no-select"] = love.audio.newSource("sounds/no-select.wav", "static"),
-    ["brick-hit-1"] = love.audio.newSource("sounds/brick-hit-1.wav", "static"),
-    ["brick-hit-2"] = love.audio.newSource("sounds/brick-hit-2.wav", "static"),
-    ["hurt"] = love.audio.newSource("sounds/hurt.wav", "static"),
-    ["victory"] = love.audio.newSource("sounds/victory.wav", "static"),
-    ["recover"] = love.audio.newSource("sounds/recover.wav", "static"),
-    ["high-score"] = love.audio.newSource("sounds/high_score.wav", "static"),
-    ["pause"] = love.audio.newSource("sounds/pause.wav", "static"),
-    ["music"] = love.audio.newSource("sounds/music.wav", "static")
+    ["paddle-hit"] = love.audio.newSource("sounds/paddle_hit.wav"),
+    ["score"] = love.audio.newSource("sounds/score.wav"),
+    ["wall-hit"] = love.audio.newSource("sounds/wall_hit.wav"),
+    ["confirm"] = love.audio.newSource("sounds/confirm.wav"),
+    ["select"] = love.audio.newSource("sounds/select.wav"),
+    ["no-select"] = love.audio.newSource("sounds/no-select.wav"),
+    ["brick-hit-1"] = love.audio.newSource("sounds/brick-hit-1.wav"),
+    ["brick-hit-2"] = love.audio.newSource("sounds/brick-hit-2.wav"),
+    ["hurt"] = love.audio.newSource("sounds/hurt.wav"),
+    ["victory"] = love.audio.newSource("sounds/victory.wav"),
+    ["recover"] = love.audio.newSource("sounds/recover.wav"),
+    ["high-score"] = love.audio.newSource("sounds/high_score.wav"),
+    ["pause"] = love.audio.newSource("sounds/pause.wav"),
+    ["music"] = love.audio.newSource("sounds/music.wav")
   }
 
   -- the state machine we'll be using to transition between various states
@@ -92,6 +93,12 @@ function love.load()
     end,
     ["play"] = function()
       return PlayState()
+    end,
+    ["serve"] = function()
+      return ServeState()
+    end,
+    ["game-over"] = function()
+      return GameOverState()
     end
   }
   gStateMachine:change("start")
@@ -187,6 +194,27 @@ function love.draw()
 end
 
 --[[
+    Renders hearts based on how much health the player has. First renders
+    full hearts, then empty hearts for however much health we're missing.
+]]
+function renderHealth(health)
+  -- start of our health rendering
+  local healthX = VIRTUAL_WIDTH - 100
+
+  -- render health left
+  for i = 1, health do
+    love.graphics.draw(gTextures["hearts"], gFrames["hearts"][1], healthX, 4)
+    healthX = healthX + 11
+  end
+
+  -- render missing health
+  for i = 1, 3 - health do
+    love.graphics.draw(gTextures["hearts"], gFrames["hearts"][2], healthX, 4)
+    healthX = healthX + 11
+  end
+end
+
+--[[
     Renders the current FPS.
 ]]
 function displayFPS()
@@ -194,4 +222,14 @@ function displayFPS()
   love.graphics.setFont(gFonts["small"])
   love.graphics.setColor(0, 255, 0, 255)
   love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 5, 5)
+end
+
+--[[
+    Simply renders the player's score at the top right, with left-side padding
+    for the score number.
+]]
+function renderScore(score)
+  love.graphics.setFont(gFonts["small"])
+  love.graphics.print("Score:", VIRTUAL_WIDTH - 60, 5)
+  love.graphics.printf(tostring(score), VIRTUAL_WIDTH - 50, 5, 40, "right")
 end

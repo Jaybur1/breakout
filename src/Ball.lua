@@ -37,6 +37,16 @@ end
 --[[
     Places the ball in the middle of the screen, with no movement.
 ]]
+function Ball:reset()
+  self.x = VIRTUAL_WIDTH / 2 - 2
+  self.y = VIRTUAL_HEIGHT / 2 - 2
+  self.dx = 0
+  self.dy = 0
+end
+
+--[[
+    Places the ball in the middle of the screen, with no movement.
+]]
 function Ball:update(dt)
   self.x = self.x + self.dx * dt
   self.y = self.y + self.dy * dt

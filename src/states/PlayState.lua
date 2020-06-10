@@ -4,7 +4,7 @@ function PlayState:init()
   self.paddle = Paddle()
 
   -- initialize ball with skin #1; different skins = different sprites
-  self.ball = Ball(1)
+  self.ball = Ball(math.random(7))
 
   -- give ball random starting velocity
   self.ball.dx = math.random(-200, 200)
