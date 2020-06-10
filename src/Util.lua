@@ -67,3 +67,42 @@ function GenerateQuadsPaddles(atlas)
   end
   return quads
 end
+
+--[[
+    This function is specifically made to piece out the bricks from the
+    sprite sheet. Since the sprite sheet has non-uniform sprites within,
+    we have to return a subset of GenerateQuads.
+]]
+function GenerateQuadsBricks(atlas)
+  return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+end
+
+--[[
+    This function is specifically made to piece out the balls from the
+    sprite sheet. For this, we have to piece out the balls a little more
+    manually, since they are in an awkward part of the sheet and small.
+]]
+function GenerateQuadsBalls(atlas)
+  local x = 96
+  local y = 48
+
+  local counter = 1
+  local quads = {}
+
+  for i = 0, 3 do
+    quads[counter] = love.graphics.newQuad(x, y, 8, 8, atlas:getDimensions())
+    x = x + 8
+    counter = counter + 1
+  end
+
+  x = 96
+  y = 56
+
+  for i = 0, 2 do
+    quads[counter] = love.graphics.newQuad(x, y, 8, 8, atlas:getDimensions())
+    x = x + 8
+    counter = counter + 1
+  end
+
+  return quads
+end
