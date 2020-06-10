@@ -36,7 +36,9 @@ function love.load()
   -- Quads we will generate for all of our textures; Quads allow us
   -- to show only part of a texture and not the entire thing
   gFrames = {
-    ["paddles"] = GenerateQuadsPaddles(gTextures["main"])
+    ["paddles"] = GenerateQuadsPaddles(gTextures["main"]),
+    ["balls"] = GenerateQuadsBalls(gTextures["main"]),
+    ["bricks"] = GenerateQuadsBricks(gTextures["main"])
   }
 
   -- initialize our virtual resolution, which will be rendered within our
@@ -85,8 +87,12 @@ function love.load()
   -- 6. 'game-over' (the player has lost; display score and allow restart)
   gStateMachine =
     StateMachine {
-    ["start"] = function() return StartState() end,
-    ["play"] = function() return PlayState() end,
+    ["start"] = function()
+      return StartState()
+    end,
+    ["play"] = function()
+      return PlayState()
+    end
   }
   gStateMachine:change("start")
 

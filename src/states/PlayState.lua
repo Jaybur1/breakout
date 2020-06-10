@@ -2,14 +2,15 @@ PlayState = Class {__includes = BaseState}
 
 function PlayState:init()
   self.paddle = Paddle()
+
   -- initialize ball with skin #1; different skins = different sprites
   self.ball = Ball(1)
 
-  --give ball random starting velocity
+  -- give ball random starting velocity
   self.ball.dx = math.random(-200, 200)
   self.ball.dy = math.random(-50, -60)
 
-  -- init ball center position
+  -- give ball position in the center
   self.ball.x = VIRTUAL_WIDTH / 2 - 4
   self.ball.y = VIRTUAL_HEIGHT - 42
 
@@ -28,6 +29,7 @@ function PlayState:update(dt)
   elseif love.keyboard.wasPressed("space") then
     self.paused = true
     gSounds["pause"]:play()
+    return
   end
 
   -- update positions based on velocity
@@ -35,16 +37,19 @@ function PlayState:update(dt)
   self.ball:update(dt)
 
   if self.ball:collides(self.paddle) then
-    -- reverse Y velocity if collision detected with paddle
+    -- reverse Y velocity if collision detected between paddle and ball
     self.ball.dy = -self.ball.dy
     gSounds["paddle-hit"]:play()
   end
 
-  -- collision detection accros all bricks
+  -- detect collision across all bricks with the ball
   for k, brick in pairs(self.bricks) do
-    -- only check collision if we are in play
+    -- only check collision if we're in play
     if brick.inPlay and self.ball:collides(brick) then
-      -- triger the brick's hit function which removes it from play
+      -- trigger the brick's hit function, which removes it from play
+      self.ball.dy = -self.ball.dy
+      -- self.ball.dx = -self.ball.dx
+
       brick:hit()
     end
   end
@@ -63,7 +68,7 @@ function PlayState:render()
   self.paddle:render()
   self.ball:render()
 
-  --pause text if paused
+  -- pause text, if paused
   if self.paused then
     love.graphics.setFont(gFonts["large"])
     love.graphics.printf("PAUSED", 0, VIRTUAL_HEIGHT / 2 - 16, VIRTUAL_WIDTH, "center")

@@ -1,18 +1,17 @@
-Brick = Class {}
+Brick = Class{}
 
-function Brick:inti(x, y)
-  --used for coloring and score calculation
-  self.tier = 0
-  self.color = 1
-
-  self.x = x
-  self.y = y
-
-  self.width = 32
-  self.height = 16
-
-  --used to determine wheter the brick should be renderd
-  self.inPlay = true
+function Brick:init(x, y)
+    -- used for coloring and score calculation
+    self.tier = 0
+    self.color = 1
+    
+    self.x = x
+    self.y = y
+    self.width = 32
+    self.height = 16
+    
+    -- used to determine whether this brick should be rendered
+    self.inPlay = true
 end
 
 --[[
@@ -20,20 +19,18 @@ end
     changing its color otherwise.
 ]]
 function Brick:hit()
-  gSounds["brick-hit-2"]:play()
+    -- sound on hit
+    gSounds['brick-hit-2']:play()
 
-  self.inPlay = false
+    self.inPlay = false
 end
 
 function Brick:render()
-  if self.inPlay then
-    love.graphics.draw(
-      gTextures["main"],
-      -- multiply color by 4 (-1) to get our color offset, then add tier to that
-      -- to draw the correct tier and color brick onto the screen
-      gFrames["bricks"][1 + ((self.color - 1) * 4) + self.tier],
-      self.x,
-      self.y
-    )
-  end
+    if self.inPlay then
+        love.graphics.draw(gTextures['main'], 
+            -- multiply color by 4 (-1) to get our color offset, then add tier to that
+            -- to draw the correct tier and color brick onto the screen
+            gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
+            self.x, self.y)
+    end
 end
